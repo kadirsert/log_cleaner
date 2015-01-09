@@ -25,15 +25,15 @@ try:
                 continue
             lc_props = line.split('|||')
             if lc_props[3] == 'delete':
-                logger.info(lc_props[0] + ' - ' + lc_props[1] + ' pattern\'i kullanilarak ' + lc_props[2] + ' gunden bu yana degismemis dosyalar siliniyor!')
+                logger.info(lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar siliniyor!')
                 logger.info(os.popen('find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2]).read())
                 os.system('rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ')')
             if lc_props[3] == 'zip':
-                logger.info(lc_props[0] + ' - ' + lc_props[1] + ' pattern\'i kullanilarak ' + lc_props[2] + ' gunden bu yana degismemis dosyalar zipleniyor!')
+                logger.info(lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar zipleniyor!')
                 log_files = os.popen('find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2]).read()
                 logger.info(log_files)
                 if log_files == '':
-                    logger.info(lc_props[0] + ' - ' + lc_props[1] + ' pattern\'i kullanilarak log dosyasi bulunamadi!')
+                    logger.info(lc_props[0] + ' - ' + lc_props[1] + ' patternli dosya bulunamadi!')
                     continue
                 if os.path.isfile(os.path.join(__location__, 'temp_file')):
                     os.remove(os.path.join(__location__, 'temp_file'))
@@ -44,7 +44,7 @@ try:
                 os.system('tar -czvf ' + tar_file + ' -T ' + os.path.join(__location__, 'temp_file'))
                 if os.path.isfile(os.path.join(__location__, 'temp_file')):
                     os.remove(os.path.join(__location__, 'temp_file'))
-                logger.info(lc_props[0] + ' - ' + lc_props[1] + ' pattern\'i kullanilarak ' + lc_props[2] + ' gunden bu yana degismemis dosyalar siliniyor!')
+                logger.info(lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar siliniyor!')
                 logger.info(os.popen('find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2]).read())
                 os.system('rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ')')
         except Exception, e:
