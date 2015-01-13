@@ -50,7 +50,8 @@ try:
                 temp_file = open(os.path.join(__location__, 'temp_file'), 'w')
                 temp_file.write(log_files)
                 temp_file.close()
-                tar_file = os.path.join(os.path.dirname(lc_props[4]), script_run_time + '_' + os.path.basename(lc_props[4]))
+                tar_file = os.path.join(os.path.dirname(lc_props[4]),
+                    script_run_time + '_' + os.path.basename(lc_props[4]))
                 lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(__location__, 'temp_file')
                 os.system(lc_command)
                 if os.path.isfile(os.path.join(__location__, 'temp_file')):
