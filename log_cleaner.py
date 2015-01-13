@@ -25,15 +25,18 @@ try:
                 continue
             lc_props = line.split('|||')
             if lc_props[3] == 'delete':
-                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
+                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
+                    lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
                 logger.info(lc_message)
                 lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2]
                 lc_message = os.popen(lc_command).read()
                 logger.info(lc_message)
-                lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ')'
+                lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + \
+                    ' -mtime +' + lc_props[2] + ')'
                 os.system(lc_command)
             if lc_props[3] == 'zip':
-                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar zipleniyor!'
+                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
+                    lc_props[2] + ' gundur degismemis dosyalar zipleniyor!'
                 logger.info(lc_message)
                 lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2]
                 log_files = os.popen(lc_command).read()
@@ -52,12 +55,14 @@ try:
                 os.system(lc_command)
                 if os.path.isfile(os.path.join(__location__, 'temp_file')):
                     os.remove(os.path.join(__location__, 'temp_file'))
-                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
+                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
+                    lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
                 logger.info(lc_message)
                 lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2]
                 lc_message = os.popen(lc_command).read()
                 logger.info(lc_message)
-                lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ')'
+                lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + \
+                    ' -mtime +' + lc_props[2] + ')'
                 os.system(lc_command)
         except Exception, e:
             logger.error(e)
