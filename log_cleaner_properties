@@ -1,6 +1,8 @@
-# log dosyalarinin pattern'i ||| log dosyalarinin pattern'i ||| gun sayisi (belirtilen gun sayisindan bu yana degistirilmemis olan dosyalar islenecektir.) ||| islem tipi (delete ya da zip) ||| log dosyalarinin kaydedilecegi tar.gz dosyasinin yolu (zip secenegi ile birlikte kullanilir.)
+# Usage:
+# Pattern of log files path ||| Pattern of log files ||| Number of days (log files those are unchanged since the given number of days. This corresponds to '-mtime +' option) ||| Type of operation (delete or zip) ||| Path of compressed log file will be saved (This is used only with zip option)
 
-# Ornek konfigurasyonlar
-# /dosya/yolu/cdmp_*|||"*.trc"|||20|||delete
-# /dosya/yolu/inc_*|||"*.trc"|||20|||zip|||/dosya/yolu/arsiv/TEST_traces.tar.gz
-# /dosya/yolu/arsiv|||"*_*_TEST_traces.tar.gz"|||20|||delete
+# Sample Configurations
+# /some/folder/pattern_*|||"*.trc"|||20|||delete
+
+# /other/folder/pattern_*|||"*.trc"|||20|||zip|||/other/folder/archives/TEST_traces.tar.gz
+# /other/folder/archives|||"*_*_TEST_traces.tar.gz"|||20|||delete
