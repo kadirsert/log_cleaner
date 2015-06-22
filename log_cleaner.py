@@ -59,18 +59,19 @@ try:
                     lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli dosya bulunamadi!'
                     logger.info(lc_message)
                     continue
-                if os.path.isfile(os.path.join(__location__, 'temp_file')):
-                    os.remove(os.path.join(__location__, 'temp_file'))
-                temp_file = open(os.path.join(__location__, 'temp_file'), 'w')
-                temp_file.write(log_files)
-                temp_file.close()
+                if not is_test_mode:
+                    if os.path.isfile(os.path.join(__location__, 'temp_file')):
+                        os.remove(os.path.join(__location__, 'temp_file'))
+                    temp_file = open(os.path.join(__location__, 'temp_file'), 'w')
+                    temp_file.write(log_files)
+                    temp_file.close()
                 tar_file = os.path.join(os.path.dirname(lc_props[4]),
                                         script_run_time + '_' + os.path.basename(lc_props[4]))
                 lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(__location__, 'temp_file')
                 if not is_test_mode:
                     os.system(lc_command)
-                if os.path.isfile(os.path.join(__location__, 'temp_file')):
-                    os.remove(os.path.join(__location__, 'temp_file'))
+                    if os.path.isfile(os.path.join(__location__, 'temp_file')):
+                        os.remove(os.path.join(__location__, 'temp_file'))
                 lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
                     lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
                 logger.info(lc_message)
@@ -80,7 +81,8 @@ try:
                 lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + \
                     ' -mtime +' + lc_props[2] + ' -type f' + ')'
                 if not is_test_mode:
-                    os.system(lc_command)
+                    if os.path.isfile(tar_file):
+                        os.system(lc_command)
         except Exception, e:
             logger.error(e)
 finally:
