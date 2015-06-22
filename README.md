@@ -1,6 +1,6 @@
 # log_cleaner
 
-Simple python script for cleaning log files. Actually it implements linux **find** command using log_cleaner_properties file.  
+Simple python script for cleaning log files. Actually it implements linux **find** command using **log_cleaner_properties** file.  
 For only testing the properties file and not applying the rules, just run as **"./log_cleaner.py test"**
 
 ===========================
