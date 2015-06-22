@@ -13,7 +13,7 @@ Pattern of log files path ||| Pattern of log files ||| Number of days (log files
 =====================
 Sample Configurations
 =====================
-/some/folder/pattern_\*|||"\*.trc"|||20|||delete  
+/some/folder|||"\*.trc"|||20|||delete  
   
 /other/folder/pattern_\*|||"\*.trc"|||20|||zip|||/other/folder/archives/TEST_traces.tar.gz  
 /other/folder/archives|||"\*_\*_TEST_traces.tar.gz"|||20|||delete
