@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 from time import gmtime, strftime
@@ -29,61 +31,53 @@ logger.addHandler(handler)
 logger.info('')
 logger.info('************************ Script Calismaya Basladi... ******************************')
 
-try:
-    qf = open(os.path.join(__location__, 'log_cleaner_properties'), 'r')
-    for line in qf:
-        try:
-            line = ''.join(line.split())
-            if line == '' or line[0] == '#':
+props_file = open(os.path.join(__location__, 'log_cleaner_properties'), 'r')
+for line in props_file:
+    try:
+        line = ''.join(line.split())
+        if line == '' or line[0] == '#':
+            continue
+        lc_props = line.split('|||')
+        if lc_props[3] == 'delete':
+            lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
+            logger.info(lc_message)
+            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
+            lc_message = os.popen(lc_command).read()
+            logger.info(lc_message)
+            lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f' + ')'
+            if not is_test_mode:
+                os.system(lc_command)
+        if lc_props[3] == 'zip':
+            lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar zipleniyor!'
+            logger.info(lc_message)
+            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
+            log_files = os.popen(lc_command).read()
+            logger.info(log_files)
+            if log_files == '':
+                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli dosya bulunamadi!'
+                logger.info(lc_message)
                 continue
-            lc_props = line.split('|||')
-            if lc_props[3] == 'delete':
-                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
-                    lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
-                logger.info(lc_message)
-                lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
-                lc_message = os.popen(lc_command).read()
-                logger.info(lc_message)
-                lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + \
-                    ' -mtime +' + lc_props[2] + ' -type f' + ')'
-                if not is_test_mode:
+            if not is_test_mode:
+                if os.path.isfile(os.path.join(__location__, 'temp_file')):
+                    os.remove(os.path.join(__location__, 'temp_file'))
+                temp_file = open(os.path.join(__location__, 'temp_file'), 'w')
+                temp_file.write(log_files)
+                temp_file.close()
+            tar_file = os.path.join(os.path.dirname(lc_props[4]), script_run_time + '_' + os.path.basename(lc_props[4]))
+            lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(__location__, 'temp_file')
+            if not is_test_mode:
+                os.system(lc_command)
+                if os.path.isfile(os.path.join(__location__, 'temp_file')):
+                    os.remove(os.path.join(__location__, 'temp_file'))
+            lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
+            logger.info(lc_message)
+            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
+            lc_message = os.popen(lc_command).read()
+            logger.info(lc_message)
+            lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f' + ')'
+            if not is_test_mode:
+                if os.path.isfile(tar_file):
                     os.system(lc_command)
-            if lc_props[3] == 'zip':
-                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
-                    lc_props[2] + ' gundur degismemis dosyalar zipleniyor!'
-                logger.info(lc_message)
-                lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
-                log_files = os.popen(lc_command).read()
-                logger.info(log_files)
-                if log_files == '':
-                    lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli dosya bulunamadi!'
-                    logger.info(lc_message)
-                    continue
-                if not is_test_mode:
-                    if os.path.isfile(os.path.join(__location__, 'temp_file')):
-                        os.remove(os.path.join(__location__, 'temp_file'))
-                    temp_file = open(os.path.join(__location__, 'temp_file'), 'w')
-                    temp_file.write(log_files)
-                    temp_file.close()
-                tar_file = os.path.join(os.path.dirname(lc_props[4]),
-                                        script_run_time + '_' + os.path.basename(lc_props[4]))
-                lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(__location__, 'temp_file')
-                if not is_test_mode:
-                    os.system(lc_command)
-                    if os.path.isfile(os.path.join(__location__, 'temp_file')):
-                        os.remove(os.path.join(__location__, 'temp_file'))
-                lc_message = lc_props[0] + ' - ' + lc_props[1] + ' patternli ' + \
-                    lc_props[2] + ' gundur degismemis dosyalar siliniyor!'
-                logger.info(lc_message)
-                lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
-                lc_message = os.popen(lc_command).read()
-                logger.info(lc_message)
-                lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + \
-                    ' -mtime +' + lc_props[2] + ' -type f' + ')'
-                if not is_test_mode:
-                    if os.path.isfile(tar_file):
-                        os.system(lc_command)
-        except Exception, e:
-            logger.error(e)
-finally:
-    qf.close()
+    except Exception, e:
+        logger.error(e)
+props_file.close()
