@@ -3,12 +3,12 @@
 
 import os
 import sys
-from time import gmtime, strftime
+from time import localtime, strftime
 import logging
 
 __author__ = 'Kadir Sert'
 __location__ = os.path.dirname(os.path.abspath(__file__))
-script_run_time = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
+script_run_time = strftime("%Y-%m-%d_%H-%M-%S", localtime())
 if len(sys.argv) == 1:
     is_test_mode = False
 elif len(sys.argv) == 2 and sys.argv[1] == 'test':
