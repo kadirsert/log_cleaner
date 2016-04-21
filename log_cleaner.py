@@ -2,36 +2,41 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 from time import localtime, strftime
 import logging
+import argparse
 
 __author__ = 'Kadir Sert'
 __location__ = os.path.dirname(os.path.abspath(__file__))
 script_run_time = strftime("%Y-%m-%d_%H-%M-%S", localtime())
-if len(sys.argv) == 1:
-    is_test_mode = False
-elif len(sys.argv) == 2 and sys.argv[1] == 'test':
+props_file_name = 'lc_props'
+is_test_mode = False
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--props", help="For custom properties file. Default value: lc_props", default="lc_props")
+parser.add_argument("-t", "--test", help="Test the properties file and not apply the rules.", action="store_true")
+args = parser.parse_args()
+
+if args.props:
+    props_file_name = args.props
+if args.test:
     is_test_mode = True
-    if os.path.isfile(os.path.join(__location__, 'log_cleaner_test.out')):
-        os.remove(os.path.join(__location__, 'log_cleaner_test.out'))
+    if os.path.isfile(os.path.join(__location__, 'logs/' + props_file_name + '_test.out')):
+        os.remove(os.path.join(__location__, 'logs/' + props_file_name + '_test.out'))
+    handler = logging.FileHandler(os.path.join(__location__, 'logs/' + props_file_name + '_test.out'))
 else:
-    print 'Invalid Argument !!!'
-    sys.exit()
+    handler = logging.FileHandler(os.path.join(__location__, 'logs/' + props_file_name + '.out'))
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-if is_test_mode:
-    handler = logging.FileHandler(os.path.join(__location__, 'log_cleaner_test.out'))
-else:
-    handler = logging.FileHandler(os.path.join(__location__, 'log_cleaner.out'))
 handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.info('')
-logger.info('************************ Script Started... ******************************')
+logger.info('****************** Script Started. Using ' + os.path.join(__location__, props_file_name) + ' file! ************************')
 
-props_file = open(os.path.join(__location__, 'log_cleaner_properties'), 'r')
+props_file = open(os.path.join(__location__, props_file_name), 'r')
 for line in props_file:
     try:
         line = ''.join(line.split())
