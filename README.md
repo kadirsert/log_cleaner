@@ -2,7 +2,7 @@
 
 Simple python script for cleaning log files. Actually it implements linux **find** command using **lc_props** file.
 For only testing the properties file and not applying the rules, run as **"./log_cleaner.py --test"**
-For using a custom properties file, run as **"./log_cleaner.py --props \*<\*filename\*>\*"**
+For using a custom properties file, run as **"./log_cleaner.py --props \<filename\>"**
 
 ===========================
 lc_props File
