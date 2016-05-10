@@ -23,11 +23,11 @@ args = parser.parse_args()
 if args.props:
     props_file_name = args.props
 props_file_path = os.path.join(__location__, props_file_name)
+temp_file_path = os.path.join(tempdir, props_file_name + '.tmp')
 if args.test:
     is_test_mode = True
     test_log_path = os.path.join(logdir, props_file_name + '.testout')
-    if os.path.isfile(test_log_path):
-        os.remove(test_log_path)
+    os.remove(test_log_path)
     handler = logging.FileHandler(test_log_path)
 else:
     log_path = os.path.join(logdir, props_file_name + '.out')
@@ -69,17 +69,15 @@ for line in props_file:
                 logger.info(lc_message)
                 continue
             if not is_test_mode:
-                if os.path.isfile(os.path.join(tempdir, props_file_name + '_temp_file')):
-                    os.remove(os.path.join(tempdir, props_file_name + '_temp_file'))
-                temp_file = open(os.path.join(tempdir, props_file_name + '_temp_file'), 'w')
+                os.remove(temp_file_path)
+                temp_file = open(temp_file_path, 'w')
                 temp_file.write(log_files)
                 temp_file.close()
             tar_file = os.path.join(os.path.dirname(lc_props[4]), script_run_time + '_' + os.path.basename(lc_props[4]))
-            lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(tempdir, props_file_name + '_temp_file')
+            lc_command = 'tar -czvf ' + tar_file + ' -T ' + temp_file_path
             if not is_test_mode:
                 os.system(lc_command)
-                if os.path.isfile(os.path.join(tempdir, props_file_name + '_temp_file')):
-                    os.remove(os.path.join(tempdir, props_file_name + '_temp_file'))
+                os.remove(temp_file_path)
             lc_message = 'Deleting file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mtime: ' + lc_props[2]
             logger.info(lc_message)
             lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
