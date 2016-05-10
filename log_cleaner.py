@@ -8,9 +8,12 @@ import argparse
 
 __author__ = 'Kadir Sert'
 __location__ = os.path.dirname(os.path.abspath(__file__))
+logdir = __location__ + 'logs/'
+tempdir = __location__ + 'temp/'
 script_run_time = strftime("%Y-%m-%d_%H-%M-%S", localtime())
 props_file_name = 'lc_props'
 is_test_mode = False
+os.chdir(__location__)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--props", help="For custom properties file. Default value: lc_props", default="lc_props")
@@ -21,11 +24,11 @@ if args.props:
     props_file_name = args.props
 if args.test:
     is_test_mode = True
-    if os.path.isfile(os.path.join(__location__, 'logs/' + props_file_name + '_test.out')):
-        os.remove(os.path.join(__location__, 'logs/' + props_file_name + '_test.out'))
-    handler = logging.FileHandler(os.path.join(__location__, 'logs/' + props_file_name + '_test.out'))
+    if os.path.isfile(os.path.join(logdir + props_file_name + '_test.out')):
+        os.remove(os.path.join(logdir + props_file_name + '_test.out'))
+    handler = logging.FileHandler(os.path.join(logdir + props_file_name + '_test.out'))
 else:
-    handler = logging.FileHandler(os.path.join(__location__, 'logs/' + props_file_name + '.out'))
+    handler = logging.FileHandler(os.path.join(logdir + props_file_name + '.out'))
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -63,17 +66,17 @@ for line in props_file:
                 logger.info(lc_message)
                 continue
             if not is_test_mode:
-                if os.path.isfile(os.path.join(__location__, 'temp_file')):
-                    os.remove(os.path.join(__location__, 'temp_file'))
-                temp_file = open(os.path.join(__location__, 'temp_file'), 'w')
+                if os.path.isfile(os.path.join(tempdir + props_file_name + '_temp_file')):
+                    os.remove(os.path.join(tempdir + props_file_name + '_temp_file'))
+                temp_file = open(os.path.join(tempdir + props_file_name + '_temp_file'), 'w')
                 temp_file.write(log_files)
                 temp_file.close()
             tar_file = os.path.join(os.path.dirname(lc_props[4]), script_run_time + '_' + os.path.basename(lc_props[4]))
-            lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(__location__, 'temp_file')
+            lc_command = 'tar -czvf ' + tar_file + ' -T ' + os.path.join(tempdir + props_file_name + '_temp_file')
             if not is_test_mode:
                 os.system(lc_command)
-                if os.path.isfile(os.path.join(__location__, 'temp_file')):
-                    os.remove(os.path.join(__location__, 'temp_file'))
+                if os.path.isfile(os.path.join(tempdir + props_file_name + '_temp_file')):
+                    os.remove(os.path.join(tempdir + props_file_name + '_temp_file'))
             lc_message = 'Deleting file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mtime: ' + lc_props[2]
             logger.info(lc_message)
             lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
