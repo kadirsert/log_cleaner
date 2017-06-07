@@ -27,7 +27,8 @@ temp_file_path = os.path.join(tempdir, props_file_name + '.tmp')
 if args.test:
     is_test_mode = True
     test_log_path = os.path.join(logdir, props_file_name + '.testout')
-    os.remove(test_log_path)
+    if os.path.isfile(test_log_path):
+        os.remove(test_log_path)
     handler = logging.FileHandler(test_log_path)
 else:
     log_path = os.path.join(logdir, props_file_name + '.out')
@@ -50,18 +51,18 @@ for line in props_file:
             continue
         lc_props = line.split('|||')
         if lc_props[3] == 'delete':
-            lc_message = 'Deleting file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mtime: ' + lc_props[2]
+            lc_message = 'Deleting file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mmin: ' + str(int(lc_props[2])*60*24)
             logger.info(lc_message)
-            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
+            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mmin +' + str(int(lc_props[2])*60*24) + ' -type f'
             lc_message = os.popen(lc_command).read()
             logger.info(lc_message)
-            lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f' + ')'
+            lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mmin +' + str(int(lc_props[2])*60*24) + ' -type f' + ')'
             if not is_test_mode:
                 os.system(lc_command)
         if lc_props[3] == 'zip':
-            lc_message = 'Compressing file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mtime: ' + lc_props[2]
+            lc_message = 'Compressing file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mmin: ' + str(int(lc_props[2])*60*24)
             logger.info(lc_message)
-            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
+            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mmin +' + str(int(lc_props[2])*60*24) + ' -type f'
             log_files = os.popen(lc_command).read()
             logger.info(log_files)
             if log_files == '':
@@ -69,7 +70,8 @@ for line in props_file:
                 logger.info(lc_message)
                 continue
             if not is_test_mode:
-                os.remove(temp_file_path)
+                if os.path.isfile(temp_file_path):
+                    os.remove(temp_file_path)
                 temp_file = open(temp_file_path, 'w')
                 temp_file.write(log_files)
                 temp_file.close()
@@ -77,13 +79,14 @@ for line in props_file:
             lc_command = 'tar -czvf ' + tar_file + ' -T ' + temp_file_path
             if not is_test_mode:
                 os.system(lc_command)
-                os.remove(temp_file_path)
-            lc_message = 'Deleting file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mtime: ' + lc_props[2]
+                if os.path.isfile(temp_file_path):
+                    os.remove(temp_file_path)
+            lc_message = 'Deleting file(s): ' + lc_props[0] + ' - ' + lc_props[1] + ' -mmin: ' + str(int(lc_props[2])*60*24)
             logger.info(lc_message)
-            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f'
+            lc_command = 'find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mmin +' + str(int(lc_props[2])*60*24) + ' -type f'
             lc_message = os.popen(lc_command).read()
             logger.info(lc_message)
-            lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mtime +' + lc_props[2] + ' -type f' + ')'
+            lc_command = 'rm -f ' + '$(find ' + lc_props[0] + ' -name ' + lc_props[1] + ' -mmin +' + str(int(lc_props[2])*60*24) + ' -type f' + ')'
             if not is_test_mode:
                 if os.path.isfile(tar_file):
                     os.system(lc_command)
