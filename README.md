@@ -8,7 +8,7 @@ For using a custom properties file, run as `./log_cleaner.py --props {properties
 
 Every line of the rules should be as next line:  
   
-    Pattern of log files path ||| Pattern of log files ||| Number of days (log files those are unchanged since the given number of days. This corresponds to '-mtime +' option) ||| Type of operation (delete or zip) ||| Path of compressed log file will be saved (This is used only with zip option)
+    Pattern of log files path ||| Pattern of log files ||| Number of days (log files whose modification times are older than the given number of days. This corresponds to '-mtime +' option) ||| Type of operation (delete or zip) ||| Path of compressed log file will be saved (This is used only with zip option)
 
 # Sample Configurations
 
