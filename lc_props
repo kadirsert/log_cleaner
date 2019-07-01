@@ -1,5 +1,5 @@
 # Usage:
-# Pattern of log files path ||| Pattern of log files ||| Number of days (log files those are unchanged since the given number of days. This corresponds to '-mtime +' option) ||| Type of operation (delete or zip) ||| Path of compressed log file will be saved (This is used only with zip option)
+# Pattern of log files path ||| Pattern of log files ||| Number of days (log files whose modification times are older than the given number of days. This corresponds to '-mtime +' option) ||| Type of operation (delete or zip) ||| Path of compressed log file will be saved (This is used only with zip option)
 
 # Sample Configurations
 # /some/folder/pattern_*|||"*.trc"|||20|||delete
